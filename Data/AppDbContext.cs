@@ -18,5 +18,6 @@ namespace CocktailStrategist.Data
             optionsBuilder.UseNpgsql(Configuration.GetConnectionString("CocktailStrategistDatabase"));
         }
         public DbSet<Drink> Drinks { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set;}
     }
 }
