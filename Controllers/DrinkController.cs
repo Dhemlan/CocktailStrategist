@@ -12,14 +12,14 @@ namespace CocktailStrategist.Controllers
         [HttpGet]
         public string Get()
         {
-            return "value1";
+            return "value2";
         }
 
         // GET api/<DrinkController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            return "value2";
         }
 
         // POST api/<DrinkController>
