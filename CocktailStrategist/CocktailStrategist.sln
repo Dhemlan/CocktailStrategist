@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocktailStrategist", "CocktailStrategist.csproj", "{2F631425-9C80-4BC4-A9F9-22E075C3DA5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocktailStrategistIntegrationTests", "..\CocktailStrategistIntegrationTests\CocktailStrategistIntegrationTests.csproj", "{16BD0208-7599-46E9-B0E6-3E55487C6C73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocktailStrategist.Tests.Integration", "..\CocktailStrategistIntegrationTests\CocktailStrategist.Tests.Integration.csproj", "{16BD0208-7599-46E9-B0E6-3E55487C6C73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailStrategist.Tests.Unit", "..\CocktailStrategistUnitTests\CocktailStrategist.Tests.Unit.csproj", "{684FDAD6-9120-4225-BC63-9A55CBAADCD4}"
 EndProject
