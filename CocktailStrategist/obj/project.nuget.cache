@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "bPa0JOf3z+yauKiNz5/L1RgGge7vU/BVYdLYeN1/l1yZSWNE4NlzgpFb7JwX3uUgG16o6e9xDPPobyuq2lPecg==",
-  "success": true,
+  "dgSpecHash": "Q9jwvZiuECVEcfOXC2aF4NhRJuwl7J0LcDZ7XwFoYZMCz6CwtYPgmv+ftmaap0jB7w2jsQRaxskHzWIp1iFs0Q==",
+  "success": false,
   "projectFilePath": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategist.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jakea\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
@@ -35,5 +35,15 @@
     "C:\\Users\\jakea\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

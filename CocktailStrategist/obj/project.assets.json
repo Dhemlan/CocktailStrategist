@@ -1468,6 +1468,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj",
       "Microsoft.AspNetCore.OpenApi >= 7.0.5",
       "Microsoft.EntityFrameworkCore >= 7.0.20",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.20",
@@ -1501,7 +1502,11 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj": {
+              "projectPath": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -1559,5 +1564,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

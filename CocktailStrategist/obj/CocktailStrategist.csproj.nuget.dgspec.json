@@ -27,7 +27,11 @@
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj": {
+                "projectPath": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategist\\CocktailStrategistIntegrationTests\\CocktailStrategistIntegrationTests.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
