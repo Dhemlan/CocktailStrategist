@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore ./CocktailStrategist/CocktailStrategist.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal ./CocktailStrategist/CocktailStrategist.sln
