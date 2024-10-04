@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <ProjectReference Include="..\CocktailStrategist\CocktailStrategistIntegrationTests\CocktailStrategistIntegrationTests.csproj" />
   </ItemGroup>
 
 </Project>
