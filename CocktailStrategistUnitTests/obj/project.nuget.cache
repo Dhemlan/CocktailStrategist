@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "kFh4ToEs/Zpgpfr8geArxNQs4h8RA9LDXEggZ8TXVhR9RvpFZv5OtpndQHbwTReggmC+I8I5IHHob3D1LsgsuA==",
+  "dgSpecHash": "1zSCmGAnMEBS6HwfywAhN1JMzgULsrQhKsjwLc5SSZRSxwg1kZ/1j9w6wE1YAK2a0fXtoEzhfIWwShw1QVAGhg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategistUnitTests\\CocktailStrategistUnitTests.csproj",
+  "projectFilePath": "C:\\Users\\jakea\\Desktop\\CocktailStrategist\\CocktailStrategistUnitTests\\CocktailStrategist.Tests.Unit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jakea\\.nuget\\packages\\coverlet.collector\\3.2.0\\coverlet.collector.3.2.0.nupkg.sha512",
+    "C:\\Users\\jakea\\.nuget\\packages\\fluentassertions\\6.12.1\\fluentassertions.6.12.1.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\microsoft.aspnetcore.mvc.testing\\7.0.20\\microsoft.aspnetcore.mvc.testing.7.0.20.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.5\\microsoft.aspnetcore.openapi.7.0.5.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\microsoft.aspnetcore.testhost\\7.0.20\\microsoft.aspnetcore.testhost.7.0.20.nupkg.sha512",
@@ -56,10 +57,12 @@
     "C:\\Users\\jakea\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512",
+    "C:\\Users\\jakea\\.nuget\\packages\\system.configuration.configurationmanager\\4.4.0\\system.configuration.configurationmanager.4.4.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.diagnostics.diagnosticsource\\7.0.1\\system.diagnostics.diagnosticsource.7.0.1.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.diagnostics.eventlog\\7.0.0\\system.diagnostics.eventlog.7.0.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.io.pipelines\\7.0.0\\system.io.pipelines.7.0.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512",
+    "C:\\Users\\jakea\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.4.0\\system.security.cryptography.protecteddata.4.4.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
     "C:\\Users\\jakea\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512"
   ],

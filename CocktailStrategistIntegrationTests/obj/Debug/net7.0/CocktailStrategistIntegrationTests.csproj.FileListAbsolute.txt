@@ -420,3 +420,7 @@ C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\obj
 C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\obj\Debug\net7.0\CocktailStrategistIntegrationTests.pdb
 C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\obj\Debug\net7.0\CocktailStrategistIntegrationTests.genruntimeconfig.cache
 C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\obj\Debug\net7.0\ref\CocktailStrategistIntegrationTests.dll
+C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\bin\Debug\net7.0\FluentAssertions.dll
+C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
+C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\bin\Debug\net7.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\jakea\Desktop\CocktailStrategist\CocktailStrategistIntegrationTests\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
