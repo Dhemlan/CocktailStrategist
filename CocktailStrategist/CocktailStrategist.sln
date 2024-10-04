@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocktailStrategist", "Cockt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocktailStrategistIntegrationTests", "..\CocktailStrategistIntegrationTests\CocktailStrategistIntegrationTests.csproj", "{16BD0208-7599-46E9-B0E6-3E55487C6C73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailStrategistUnitTests", "..\CocktailStrategistUnitTests\CocktailStrategistUnitTests.csproj", "{684FDAD6-9120-4225-BC63-9A55CBAADCD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailStrategist.Tests.Unit", "..\CocktailStrategistUnitTests\CocktailStrategist.Tests.Unit.csproj", "{684FDAD6-9120-4225-BC63-9A55CBAADCD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
