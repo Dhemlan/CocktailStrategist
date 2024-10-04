@@ -1,8 +1,6 @@
 ﻿using CocktailStrategist.Data;
 using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 
 namespace CocktailStrategist.Services
 {

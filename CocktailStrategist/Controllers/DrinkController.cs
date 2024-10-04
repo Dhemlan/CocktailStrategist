@@ -1,9 +1,6 @@
 ﻿using CocktailStrategist.Data;
-using CocktailStrategist.Services;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CocktailStrategist.Controllers
 {
@@ -26,9 +23,10 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Drink>> Get(Guid id)
         {
-            return "value2";
+            var content = _drinkService.Get(id);
+            return Ok(content);
         }
 
         [HttpPost]
@@ -38,13 +36,15 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put([FromBody] Drink drink)
         {
+            _drinkService.Update(drink);
         }
 
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
+            _drinkService.Delete(id);
         }
     }
 }
