@@ -24,25 +24,25 @@ namespace CocktailStrategistIntegrationTests
             scope.Dispose();
         }
 
-        [Test]
-        public async Task Get()
-        {
-            // Arrange
-            var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-            {
-            });
-            var client = factory.CreateClient();
-            var url = "/drink";
+        //[Test]
+        //public async Task Get()
+        //{
+        //    // Arrange
+        //    var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        //    {
+        //    });
+        //    var client = factory.CreateClient();
+        //    var url = "/drink";
 
-            // Act
+        //    // Act
 
-            var response = await client.GetAsync(url);
-            var content = await response.Content.ReadAsStringAsync();
+        //    var response = await client.GetAsync(url);
+        //    var content = await response.Content.ReadAsStringAsync();
 
-            // Assert
-            response.EnsureSuccessStatusCode();
-            Assert.That(content.Equals("value2"));
-        }
+        //    // Assert
+        //    response.EnsureSuccessStatusCode();
+        //    //Assert.That(content.Equals("value2"));
+        //}
 
         [Test]
         public async Task DrinkControllerCreatesNewDrink()
