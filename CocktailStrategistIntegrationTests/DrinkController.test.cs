@@ -11,7 +11,6 @@ namespace CocktailStrategistIntegrationTests
     [TestFixture]
     public class DrinkControllerTests
     {
-        private TransactionScope scope;
         private HttpClient client;
 
         [OneTimeSetUp]
@@ -22,20 +21,8 @@ namespace CocktailStrategistIntegrationTests
             });
             client = factory.CreateClient();
         }
-        [OneTimeTearDown] public void FixtureTearDown() { client.Dispose(); }
-
-        //[SetUp]
-        //public void SetUp()
-        //{
-        //    scope = new TransactionScope();
-        //    Console.WriteLine("starting scope");
-        //}
-
-        //[TearDown]
-        //public void TearDown()
-        //{
-        //    scope.Dispose();
-        //}
+        [OneTimeTearDown]
+        public void FixtureTearDown() { client.Dispose(); }
 
         [Test]
         public async Task Get_retrievesSpecifiedDrink()
@@ -71,8 +58,7 @@ namespace CocktailStrategistIntegrationTests
         [Test]
         public async Task Post_createsNewDrink()
         {
-            // Arrange
-                
+            // Arrange        
             var url = "/drink";
             var drink =  new Drink { Id = Guid.NewGuid(), Name = "Test drink" } ;
             var payload = JsonConvert.SerializeObject(drink);
@@ -84,10 +70,10 @@ namespace CocktailStrategistIntegrationTests
             var getUrl = $"/drink/{drink.Id}";
             var getResponse = await client.GetAsync(getUrl);
             var content = await getResponse.Content.ReadAsStringAsync();
+            var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
 
             // Assert
             createResponse.EnsureSuccessStatusCode();
-            var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
             retrievedDrink.Should().BeEquivalentTo(drink, o => o.ComparingByMembers<Drink>());
 
         }
