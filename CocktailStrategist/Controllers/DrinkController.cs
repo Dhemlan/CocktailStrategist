@@ -29,7 +29,11 @@ namespace CocktailStrategist.Controllers
         public async Task<ActionResult<Drink>> Get(Guid id)
         {
             var content = await _drinkService.Get(id);
+<<<<<<< HEAD
+            return content == null ? NotFound() :  content;
+=======
             return content == null ? NotFound() : content;
+>>>>>>> master
         }
 
         [HttpPost]

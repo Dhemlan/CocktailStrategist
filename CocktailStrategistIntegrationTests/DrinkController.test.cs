@@ -47,13 +47,11 @@ namespace CocktailStrategistIntegrationTests
 
             var response = await client.GetAsync(url);
             var content = await response.Content.ReadAsStringAsync();
-
+            Console.WriteLine("destroying scope");
+            scope.Dispose();
             // Assert
             response.EnsureSuccessStatusCode();
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
-
-            // Assert
-            response.EnsureSuccessStatusCode();
 
             retrievedDrink.Should().BeEquivalentTo(drink, o => o.ComparingByMembers<Drink>());
 
@@ -62,19 +60,24 @@ namespace CocktailStrategistIntegrationTests
         [Test]
         public async Task Post_createsNewDrink()
         {
-                // Arrange
-                
+                // Arrange     
                 var url = "/drink";
+                var id = Guid.NewGuid();
+                var getUrl = $"/drink/{id}";
 
-                var drink =  new Drink { Id = Guid.NewGuid(), Name = "Test drink" } ;
+                var drink =  new Drink { Id = id, Name = "Test drink" } ;
                 var payload = JsonConvert.SerializeObject(drink);
                 var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
-                // Act
-
-                var response = await client.PostAsync(url, request);
-                var content = await response.Content.ReadAsStringAsync();
+                // Act                
+                var createResponse = await client.PostAsync(url, request);
+                var getResponse = await client.GetAsync(getUrl);
+                var content = await getResponse.Content.ReadAsStringAsync();
+                var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content); 
                 
+                // Assert
+                createResponse.EnsureSuccessStatusCode();
+                retrievedDrink.Should().BeEquivalentTo(drink, o => o.ComparingByMembers<Drink>());
         }
 
         // drink with a non-existant ingredient
