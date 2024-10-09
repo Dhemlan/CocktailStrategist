@@ -1,4 +1,5 @@
 using CocktailStrategist.Data;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Text;
@@ -6,52 +7,63 @@ using System.Transactions;
 
 namespace CocktailStrategistIntegrationTests
 {
-    [TestFixture, Rollback]
+    [TestFixture]
     public class DrinkControllerTests
     {
         private TransactionScope scope;
+        private HttpClient client;
 
-        [SetUp]
-        public void SetUp()
+        [OneTimeSetUp]
+        public void FixtureSetUp()
         {
-            scope = new TransactionScope();
-            Console.WriteLine("starting scope");
+            var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            {
+            });
+            client = factory.CreateClient();
         }
+        [OneTimeTearDown] public void FixtureTearDown() { client.Dispose(); }
 
-        [TearDown]
-        public void TearDown()
-        {
-            scope.Dispose();
-        }
-
-        //[Test]
-        //public async Task Get()
+        //[SetUp]
+        //public void SetUp()
         //{
-        //    // Arrange
-        //    var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-        //    {
-        //    });
-        //    var client = factory.CreateClient();
-        //    var url = "/drink";
+        //    scope = new TransactionScope();
+        //    Console.WriteLine("starting scope");
+        //}
 
-        //    // Act
-
-        //    var response = await client.GetAsync(url);
-        //    var content = await response.Content.ReadAsStringAsync();
-
-        //    // Assert
-        //    response.EnsureSuccessStatusCode();
-        //    //Assert.That(content.Equals("value2"));
+        //[TearDown]
+        //public void TearDown()
+        //{
+        //    scope.Dispose();
         //}
 
         [Test]
-        public async Task DrinkControllerCreatesNewDrink()
+        public async Task Get_retrievesSpecifiedDrink()
+        {
+            // Arrange
+            var drink = new Drink { Id = Guid.Parse("7fa85f64-5717-4562-b3fc-2c963f66afa6"), Name = "Mai Tai" };
+            var url = $"/drink/{drink.Id}";
+
+            // Act
+
+            var response = await client.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            retrievedDrink.Should().BeEquivalentTo(drink, o => o.ComparingByMembers<Drink>());
+
+        }
+
+        [Test]
+        public async Task Post_createsNewDrink()
         {
                 // Arrange
-                var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-                {
-                });
-                var client = factory.CreateClient();
+                
                 var url = "/drink";
 
                 var drink =  new Drink { Id = Guid.NewGuid(), Name = "Test drink" } ;
@@ -62,11 +74,7 @@ namespace CocktailStrategistIntegrationTests
 
                 var response = await client.PostAsync(url, request);
                 var content = await response.Content.ReadAsStringAsync();
-
-                // Assert
-                response.EnsureSuccessStatusCode();
-
-                //Assert.That(content.Equals("value2"));
+                
         }
 
         // drink with a non-existant ingredient
