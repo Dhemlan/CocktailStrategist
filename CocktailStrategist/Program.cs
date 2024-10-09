@@ -15,7 +15,7 @@ builder.Services.AddScoped<IDrinkService, DrinkService>();
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));
 
 builder.Services.AddDbContextPool<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("CocktailStrategistDatabase")));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Database=CocktailStrategistDatabase")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

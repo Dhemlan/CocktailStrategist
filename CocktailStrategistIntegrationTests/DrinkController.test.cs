@@ -1,4 +1,5 @@
 using CocktailStrategist.Data;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Text;
@@ -6,21 +7,22 @@ using System.Transactions;
 
 namespace CocktailStrategistIntegrationTests
 {
-    [TestFixture, Rollback]
+    [TestFixture]
     public class DrinkControllerTests
     {
         private TransactionScope scope;
 
         [SetUp]
-        public void SetUp()
+        public void Init()
         {
             scope = new TransactionScope();
             Console.WriteLine("starting scope");
         }
 
         [TearDown]
-        public void TearDown()
+        public void CleanUp()
         {
+            Console.WriteLine("destroying scope");
             scope.Dispose();
         }
 
@@ -53,20 +55,25 @@ namespace CocktailStrategistIntegrationTests
                 });
                 var client = factory.CreateClient();
                 var url = "/drink";
+                var id = Guid.NewGuid();
+                var getUrl = $"/drink/{id}";
 
-                var drink =  new Drink { Id = Guid.NewGuid(), Name = "Test drink" } ;
+                var drink =  new Drink { Id = id, Name = "Test drink" } ;
                 var payload = JsonConvert.SerializeObject(drink);
                 var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
                 // Act
 
-                var response = await client.PostAsync(url, request);
-                var content = await response.Content.ReadAsStringAsync();
+                var createResponse = await client.PostAsync(url, request);
+                var getResponse = await client.GetAsync(getUrl);
+                var content = await getResponse.Content.ReadAsStringAsync();
+                var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content); 
+                
 
                 // Assert
-                response.EnsureSuccessStatusCode();
+                createResponse.EnsureSuccessStatusCode();
 
-                //Assert.That(content.Equals("value2"));
+                retrievedDrink.Should().BeEquivalentTo(drink, o => o.ComparingByMembers<Drink>());
         }
 
         // drink with a non-existant ingredient

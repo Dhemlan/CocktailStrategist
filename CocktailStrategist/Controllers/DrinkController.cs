@@ -16,6 +16,7 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Drink>>> Get()
         {
             var content = await _drinkService.Get();
@@ -23,10 +24,12 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Drink>> Get(Guid id)
         {
-            var content = _drinkService.Get(id);
-            return Ok(content);
+            var content = await _drinkService.Get(id);
+            return content == null ? NotFound() :  content;
         }
 
         [HttpPost]
