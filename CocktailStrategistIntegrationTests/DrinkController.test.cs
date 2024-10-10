@@ -34,7 +34,8 @@ namespace CocktailStrategistIntegrationTests
             // Act
             var response = await client.GetAsync(url);
             var content = await response.Content.ReadAsStringAsync();
-
+            Console.WriteLine("destroying scope");
+            scope.Dispose();
             // Assert
             response.EnsureSuccessStatusCode();
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
