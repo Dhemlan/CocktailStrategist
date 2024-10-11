@@ -2,9 +2,9 @@ using CocktailStrategist.Data;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Text;
-using System.Transactions;
 
 namespace CocktailStrategistIntegrationTests
 {
@@ -34,8 +34,7 @@ namespace CocktailStrategistIntegrationTests
             // Act
             var response = await client.GetAsync(url);
             var content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("destroying scope");
-            scope.Dispose();
+
             // Assert
             response.EnsureSuccessStatusCode();
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
@@ -43,7 +42,7 @@ namespace CocktailStrategistIntegrationTests
         }
 
         [Test]
-        public async Task Get_returns404WithIncorrectID()
+        public async Task Get_responds404WithNonExistantID()
         {
             // Arrange
             var drink = new Drink { Id = Guid.NewGuid(), Name = "Fake" };
@@ -61,7 +60,7 @@ namespace CocktailStrategistIntegrationTests
         {
             // Arrange        
             var url = "/drink";
-            var drink =  new Drink { Id = Guid.NewGuid(), Name = "Test drink" } ;
+            var drink = new Drink { Id = Guid.NewGuid(), Name = "Test drink" };
             var payload = JsonConvert.SerializeObject(drink);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
@@ -79,7 +78,78 @@ namespace CocktailStrategistIntegrationTests
 
         }
 
-        // drink with a non-existant ingredient
-        //test
-    }
+        [Test]
+        public async Task Post_responds400WithMalformedDrink()
+        {
+            // Arrange
+            var url = "/drink";
+            var drink = new { Id = Guid.NewGuid(), Foo = "bar" };
+            var getUrl = $"/drink/{drink.Id}";
+            var payload = JsonConvert.SerializeObject(drink);
+            var request = new StringContent(payload, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await client.PostAsync(url, request);
+            var getResponse = await client.GetAsync(url);
+
+            // Assert
+            response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            // awaiting validation implementation
+           // getResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        //[Test]
+        //public async Task Post_returns400WithDrinkContainingNonExistantIngredient()
+        //{
+
+        //}
+        [Test]
+        public async Task Delete_removesSpecifiedDrink()
+        {
+            // Arrange
+            var url = "/drink";
+            var drink = new Drink { Id = Guid.NewGuid(), Name = "Test drink" };
+            var payload = JsonConvert.SerializeObject(drink);
+            var request = new StringContent(payload, Encoding.UTF8, "application/json");
+            await client.PostAsync(url, request);
+            var count = await CountGetRequestContents(url, client);
+
+            var deleteUrl = $"{url}/{drink.Id}";
+            // Act
+            var response = await client.DeleteAsync(deleteUrl);
+            var getResponse = await client.GetAsync(deleteUrl);
+            var postDeleteCount = await CountGetRequestContents(url, client);
+
+            // Assert
+            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            getResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            postDeleteCount.Should().Be(count - 1);
+        }
+
+        [Test]
+        public async Task Delete_responds404WithNonExistantId()
+        {
+            // Arrange
+            var url = "/drink";
+            var drink = new Drink { Id = Guid.NewGuid(), Name = "Fake" };
+            var count = await CountGetRequestContents(url, client);
+            var deleteUrl = $"{url}/{drink.Id}";
+
+            // Act
+            var response = await client.DeleteAsync(deleteUrl);
+            var postDeleteCount = await CountGetRequestContents(url, client);
+
+            // Assert
+            response.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            postDeleteCount.Should().Be(count);
+        }
+
+        private async Task<int> CountGetRequestContents(string url, HttpClient client)
+        {
+            var getResponse = await client.GetAsync(url);
+            var content = await getResponse.Content.ReadAsStringAsync();
+            var retrievedList = JsonConvert.DeserializeObject<IEnumerable<Drink>>(content);
+            return retrievedList.Count();
+        }
+}
 }

@@ -33,21 +33,25 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] Drink drink)
+        public async Task Post([FromBody] Drink drink)
         {
-            _drinkService.Create(drink);
+            await _drinkService.Create(drink);
         }
 
         [HttpPut("{id}")]
-        public void Put([FromBody] Drink drink)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task Put([FromBody] Drink drink)
         {
-            _drinkService.Update(drink);
+            await _drinkService.Update(drink);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _drinkService.Delete(id);
+            return await _drinkService.Delete(id) == null ? NotFound() : Ok();
         }
     }
 }

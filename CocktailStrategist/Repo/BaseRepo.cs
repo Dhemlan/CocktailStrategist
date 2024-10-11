@@ -8,7 +8,7 @@ namespace CocktailStrategist.Repo
 {
     public class BaseRepo<T> : IBaseRepo<T> where T : class
     { 
-        private readonly AppDbContext _dbContext;
+        private readonly DbContext _dbContext;
         private readonly DbSet<T> _dbSet;
         
         public BaseRepo(AppDbContext dbContext)
@@ -21,7 +21,7 @@ namespace CocktailStrategist.Repo
             _dbSet.Add(entity);
         }
 
-        public async Task<T> Get(Guid id)
+        public async Task<T?> Get(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -37,10 +37,10 @@ namespace CocktailStrategist.Repo
 
         }
 
-        public async Task Delete(Guid id)
+        public async Task<T?> Delete(Guid id)
         {
-            T existing = await _dbSet.FindAsync(id);
-            _dbSet.Remove(existing);
+            T? existing = await _dbSet.FindAsync(id);
+            return existing != null ? _dbSet.Remove(existing).Entity : null;
         }
 
         public async Task SaveAsync()

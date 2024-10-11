@@ -4,14 +4,14 @@ namespace CocktailStrategist.Services.Interfaces
 {
     public interface IDrinkService
     {
-        void Create(Drink drink); 
+        Task Create(Drink drink); 
         Task<IEnumerable<Drink>> Get();
 
         Task<Drink> Get(Guid id);
 
-        void Update(Drink drink);
+        Task Update(Drink drink);
 
-        void Delete(Guid id);
+        Task<Drink?> Delete(Guid id);
 
 
     }

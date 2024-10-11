@@ -10,7 +10,7 @@ namespace CocktailStrategist.Services
         public DrinkService(IBaseRepo<Drink> repo) {
             _repo = repo;
         }
-        public async void Create(Drink drink)
+        public async Task Create(Drink drink)
         {
             _repo.Create(drink);
             await _repo.SaveAsync();
@@ -26,16 +26,17 @@ namespace CocktailStrategist.Services
             return _repo.Get(id);
         }
 
-        public async void Update(Drink drink)
+        public async Task Update(Drink drink)
         {
             _repo.Update(drink);
             await _repo.SaveAsync();
         }
 
-        public async void Delete(Guid id)
+        public async Task<Drink?> Delete(Guid id)
         {
-           await _repo.Delete(id);
+           var result = await _repo.Delete(id);
            await _repo.SaveAsync();
+           return result;
         }
     }
 }

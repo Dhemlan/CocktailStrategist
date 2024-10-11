@@ -6,5 +6,6 @@
         public required string Name { get; set; }
 
         public List<Drink> Drinks { get; } = new List<Drink>();
+
     }
 }
