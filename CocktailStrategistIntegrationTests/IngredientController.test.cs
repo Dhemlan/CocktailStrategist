@@ -7,7 +7,7 @@ using System.Net;
 namespace CocktailStrategist.Tests.Integration
 {
     [TestFixture]
-    public class DrinkControllerTests
+    public class IngredientControllerTests
     {
         private HttpClient client;
 

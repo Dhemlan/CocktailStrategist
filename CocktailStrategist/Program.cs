@@ -14,8 +14,20 @@ builder.Services.AddScoped<IDrinkService, DrinkService>();
 builder.Services.AddScoped<IIngredientService, IngredientService> ();
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));
 
+string connString;
+if (builder.Environment.IsDevelopment()) {
+    connString = "CocktailStrategistDatabase";
+}
+else if (builder.Environment.IsProduction())
+{
+    connString = "CSProdDatabase";
+}
+else {
+        connString = "CSTestDatabase";
+}
+
 builder.Services.AddDbContextPool<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("CocktailStrategistDatabase")));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString(connString)));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

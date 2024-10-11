@@ -6,20 +6,10 @@ namespace CocktailStrategist.Data
 {
     public class AppDbContext : DbContext
     {
-        //protected readonly IConfiguration Configuration;
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
         {
         }
-        //public AppDbContext(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //}
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseNpgsql(Configuration.GetConnectionString("CocktailStrategistDatabase"));
-        //}
         public DbSet<Drink> Drinks { get; set; }
         public DbSet<Ingredient> Ingredients { get; set;}
     }

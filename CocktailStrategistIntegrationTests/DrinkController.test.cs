@@ -1,17 +1,19 @@
 using CocktailStrategist.Data;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
 using System.Net;
 using System.Text;
+using System.Transactions;
 
-namespace CocktailStrategistIntegrationTests
+namespace CocktailStrategist.Tests.Integration
 {
     [TestFixture]
     public class DrinkControllerTests
     {
         private HttpClient client;
+        private TransactionScope transaction;
 
         [OneTimeSetUp]
         public void FixtureSetUp()
@@ -23,6 +25,14 @@ namespace CocktailStrategistIntegrationTests
         }
         [OneTimeTearDown]
         public void FixtureTearDown() { client.Dispose(); }
+        [SetUp]
+        public void TestSetUp()
+        {
+            transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        }
+        [TearDown]
+        public void TestTearDown() { transaction.Dispose();}
 
         [Test]
         public async Task Get_retrievesSpecifiedDrink()
@@ -71,6 +81,7 @@ namespace CocktailStrategistIntegrationTests
             var getResponse = await client.GetAsync(getUrl);
             var content = await getResponse.Content.ReadAsStringAsync();
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
+            await client.DeleteAsync(getUrl);
 
             // Assert
             createResponse.EnsureSuccessStatusCode();
