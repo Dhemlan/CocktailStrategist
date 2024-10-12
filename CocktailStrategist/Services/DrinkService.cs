@@ -26,10 +26,11 @@ namespace CocktailStrategist.Services
             return _repo.Get(id);
         }
 
-        public async Task Update(Drink drink)
+        public async Task<Drink?> Update(Drink drink)
         {
-            _repo.Update(drink);
+            var updatedDrink = await _repo.Update(drink, drink.Id);
             await _repo.SaveAsync();
+            return updatedDrink;
         }
 
         public async Task<Drink?> Delete(Guid id)

@@ -30,10 +30,13 @@ namespace CocktailStrategist.Repo
         {
             return await _dbSet.ToListAsync();
         }
-        public void Update(T entity)
+        public async Task<T?> Update(T entity, Guid id)
         {
+            T? existing = await _dbSet.FindAsync(id);
+            if (existing == null) return null;
             _dbSet.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
+            return existing;
 
         }
 

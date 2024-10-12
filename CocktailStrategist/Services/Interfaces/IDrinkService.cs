@@ -9,7 +9,7 @@ namespace CocktailStrategist.Services.Interfaces
 
         Task<Drink> Get(Guid id);
 
-        Task Update(Drink drink);
+        Task<Drink?> Update(Drink drink);
 
         Task<Drink?> Delete(Guid id);
 
