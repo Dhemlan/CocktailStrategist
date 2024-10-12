@@ -13,7 +13,8 @@ namespace CocktailStrategist.Tests.Integration
     public class DrinkControllerTests
     {
         private HttpClient client;
-        private TransactionScope transaction;
+        private string baseUrl = "/drink";
+        //private TransactionScope transaction;
 
         [OneTimeSetUp]
         public void FixtureSetUp()
@@ -25,21 +26,21 @@ namespace CocktailStrategist.Tests.Integration
         }
         [OneTimeTearDown]
         public void FixtureTearDown() { client.Dispose(); }
-        [SetUp]
-        public void TestSetUp()
-        {
-            transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        //[SetUp]
+        //public void TestSetUp()
+        //{
+        //    transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-        }
-        [TearDown]
-        public void TestTearDown() { transaction.Dispose();}
+        //}
+        //[TearDown]
+        //public void TestTearDown() { transaction.Dispose();}
 
         [Test]
         public async Task Get_retrievesSpecifiedDrink()
         {
             // Arrange
             var drink = new Drink { Id = Guid.Parse("7fa85f64-5717-4562-b3fc-2c963f66afa6"), Name = "Mai Tai" };
-            var url = $"/drink/{drink.Id}";
+            var url = baseUrl + $"/{drink.Id}";
 
             // Act
             var response = await client.GetAsync(url);
@@ -56,7 +57,7 @@ namespace CocktailStrategist.Tests.Integration
         {
             // Arrange
             var drink = new Drink { Id = Guid.NewGuid(), Name = "Fake" };
-            var url = $"/drink/{drink.Id}";
+            var url = baseUrl + $"/{drink.Id}";
 
             // Act
             var response = await client.GetAsync(url);
@@ -69,15 +70,14 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Post_createsNewDrink()
         {
             // Arrange        
-            var url = "/drink";
             var drink = new Drink { Id = Guid.NewGuid(), Name = "Test drink" };
             var payload = JsonConvert.SerializeObject(drink);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
             // Act
-            var createResponse = await client.PostAsync(url, request);
+            var createResponse = await client.PostAsync(baseUrl, request);
 
-            var getUrl = $"/drink/{drink.Id}";
+            var getUrl = baseUrl + $"/{drink.Id}";
             var getResponse = await client.GetAsync(getUrl);
             var content = await getResponse.Content.ReadAsStringAsync();
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
@@ -93,20 +93,18 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Post_responds400WithMalformedDrink()
         {
             // Arrange
-            var url = "/drink";
             var drink = new { Id = Guid.NewGuid(), Foo = "bar" };
-            var getUrl = $"/drink/{drink.Id}";
+            var getUrl = baseUrl + $"/{drink.Id}";
             var payload = JsonConvert.SerializeObject(drink);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await client.PostAsync(url, request);
-            var getResponse = await client.GetAsync(url);
+            var response = await client.PostAsync(baseUrl, request);
+            var getResponse = await client.GetAsync(getUrl);
 
             // Assert
             response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            // awaiting validation implementation
-           // getResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            getResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
 
         //[Test]
@@ -115,21 +113,27 @@ namespace CocktailStrategist.Tests.Integration
 
         //}
         [Test]
+        public async Task Put_UpdatesDrinkName()
+        {
+            // Arrange
+            // Act
+            // Assert
+        }
+        [Test]
         public async Task Delete_removesSpecifiedDrink()
         {
             // Arrange
-            var url = "/drink";
             var drink = new Drink { Id = Guid.NewGuid(), Name = "Test drink" };
             var payload = JsonConvert.SerializeObject(drink);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
-            await client.PostAsync(url, request);
-            var count = await CountGetRequestContents(url, client);
+            await client.PostAsync(baseUrl, request);
+            var count = await CountGetRequestContents(baseUrl, client);
 
-            var deleteUrl = $"{url}/{drink.Id}";
+            var deleteUrl = baseUrl + $"/{drink.Id}";
             // Act
             var response = await client.DeleteAsync(deleteUrl);
             var getResponse = await client.GetAsync(deleteUrl);
-            var postDeleteCount = await CountGetRequestContents(url, client);
+            var postDeleteCount = await CountGetRequestContents(baseUrl, client);
 
             // Assert
             response.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -141,26 +145,25 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Delete_responds404WithNonExistantId()
         {
             // Arrange
-            var url = "/drink";
             var drink = new Drink { Id = Guid.NewGuid(), Name = "Fake" };
-            var count = await CountGetRequestContents(url, client);
-            var deleteUrl = $"{url}/{drink.Id}";
+            var count = await CountGetRequestContents(baseUrl, client);
+            var deleteUrl = baseUrl + $"/{drink.Id}";
 
             // Act
             var response = await client.DeleteAsync(deleteUrl);
-            var postDeleteCount = await CountGetRequestContents(url, client);
+            var postDeleteCount = await CountGetRequestContents(baseUrl, client);
 
             // Assert
             response.Should().HaveStatusCode(HttpStatusCode.NotFound);
             postDeleteCount.Should().Be(count);
         }
 
-        private async Task<int> CountGetRequestContents(string url, HttpClient client)
+        private async Task<int?> CountGetRequestContents(string url, HttpClient client)
         {
             var getResponse = await client.GetAsync(url);
             var content = await getResponse.Content.ReadAsStringAsync();
             var retrievedList = JsonConvert.DeserializeObject<IEnumerable<Drink>>(content);
-            return retrievedList.Count();
+            return retrievedList?.Count();
         }
 }
 }

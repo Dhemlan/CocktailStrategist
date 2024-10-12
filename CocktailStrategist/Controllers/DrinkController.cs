@@ -33,6 +33,8 @@ namespace CocktailStrategist.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task Post([FromBody] Drink drink)
         {
             await _drinkService.Create(drink);
@@ -41,6 +43,7 @@ namespace CocktailStrategist.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task Put([FromBody] Drink drink)
         {
             await _drinkService.Update(drink);
