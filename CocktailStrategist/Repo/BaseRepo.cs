@@ -30,13 +30,13 @@ namespace CocktailStrategist.Repo
         {
             return await _dbSet.ToListAsync();
         }
-        public async Task<T?> Update(T entity, Guid id)
+        public void Update(T entity)
         {
-            T? existing = await _dbSet.FindAsync(id);
-            if (existing == null) return null;
+            // Todo: research change tracker functioning
+            // This works but is it appropriate?
+            _dbContext.ChangeTracker.Clear();
             _dbSet.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
-            return existing;
 
         }
 

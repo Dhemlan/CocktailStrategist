@@ -7,7 +7,7 @@ namespace CocktailStrategist.Repo.Interfaces
         void Create(T entity); 
         Task<IEnumerable<T>> GetAll();
         Task<T?> Get(Guid id);
-        Task<T?> Update(T entity, Guid id);
+        void Update(T entity);
         Task<T?> Delete(Guid id);
         Task SaveAsync();
     }

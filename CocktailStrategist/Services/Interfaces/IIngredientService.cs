@@ -7,10 +7,10 @@ namespace CocktailStrategist.Services.Interfaces
         Task Create(Ingredient ingredient);
         Task<IEnumerable<Ingredient>> Get();
 
-        Task<Ingredient> Get(Guid id);
+        Task<Ingredient?> Get(Guid id);
 
         Task Update(Ingredient ingredient);
 
-        Task Delete(Guid id);
+        Task<Ingredient?> Delete(Guid id);
     }
 }

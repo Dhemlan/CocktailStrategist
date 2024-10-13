@@ -18,21 +18,24 @@ namespace CocktailStrategist.Services
 
         public Task<IEnumerable<Ingredient>> Get()
         {
-            throw new NotImplementedException();
+            return _repo.GetAll();
         }
 
-        public Task<Ingredient> Get(Guid id)
+        public Task<Ingredient?> Get(Guid id)
         {
             return _repo.Get(id);
         }
 
-        public Task Update(Ingredient ingredient)
+        public async Task Update(Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            _repo.Update(ingredient);
+            await _repo.SaveAsync();
         }
-        public Task Delete(Guid id)
+        public async Task<Ingredient?> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _repo.Delete(id);
+            await _repo.SaveAsync();
+            return result;
         }
     }
 }

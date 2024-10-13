@@ -7,9 +7,9 @@ namespace CocktailStrategist.Services.Interfaces
         Task Create(Drink drink); 
         Task<IEnumerable<Drink>> Get();
 
-        Task<Drink> Get(Guid id);
+        Task<Drink?> Get(Guid id);
 
-        Task<Drink?> Update(Drink drink);
+        Task Update(Drink drink);
 
         Task<Drink?> Delete(Guid id);
 

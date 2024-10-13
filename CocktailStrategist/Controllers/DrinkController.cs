@@ -44,10 +44,14 @@ namespace CocktailStrategist.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Put([FromBody] Drink drink)
+        public async Task<IActionResult> Update([FromBody] Drink drink)
         {
-            var content = await _drinkService.Update(drink);
-            return content == null ? NotFound() : Ok();
+            if (await _drinkService.Get(drink.Id) == null)
+            {
+                return NotFound();
+            }
+            await _drinkService.Update(drink);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
