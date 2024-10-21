@@ -1,9 +1,12 @@
 using CocktailStrategist.Data;
+using CocktailStrategist.Data.Enum;
 using CocktailStrategist.Repo;
 using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
+var defaultCors = "default";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +29,19 @@ else {
         connString = "CSTestDatabase";
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(defaultCors, policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContextPool<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString(connString)));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString(connString),
+    o => o.MapEnum<IngredientCategory>("ingredientCategory")));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,6 +56,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(defaultCors);
 
 app.UseAuthorization();
 

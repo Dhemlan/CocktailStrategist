@@ -13,6 +13,7 @@ namespace CocktailStrategist.Tests.Integration
     public class DrinkControllerTests
     {
         private readonly Guid MAI_TAI_ID = Guid.Parse("7fa85f64-5717-4562-b3fc-2c963f66afa6");
+        private readonly Guid ENGLISH_GARDEN_ID = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa8");
         private const string BASE_URL = "/drink";
 
         private HttpClient client;
@@ -25,9 +26,22 @@ namespace CocktailStrategist.Tests.Integration
             {
             });
             client = factory.CreateClient();
+            var drink = new Drink { Id = MAI_TAI_ID, Name = "Mai Tai" };
+            var payload = JsonConvert.SerializeObject(drink);
+            var request = new StringContent(payload, Encoding.UTF8, "application/json");
+            client.PostAsync(BASE_URL, request);
+            drink = new Drink { Id = ENGLISH_GARDEN_ID, Name = "English Garden" };
+            payload = JsonConvert.SerializeObject(drink);
+            request = new StringContent(payload, Encoding.UTF8, "application/json");
+            client.PostAsync(BASE_URL, request);
+
+
         }
         [OneTimeTearDown]
-        public void FixtureTearDown() { client.Dispose(); }
+        public void FixtureTearDown() {
+            client.DeleteAsync(BASE_URL + $"{MAI_TAI_ID}");
+            client.DeleteAsync(BASE_URL + $"{ENGLISH_GARDEN_ID}");
+            client.Dispose(); }
         //[SetUp]
         //public void TestSetUp()
         //{
@@ -73,7 +87,7 @@ namespace CocktailStrategist.Tests.Integration
         {
             // Arrange
             var drinks = new List<Drink> { new Drink { Id = MAI_TAI_ID, Name = "Mai Tai" },
-                new Drink { Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa8"), Name = "English Garden" } };
+                new Drink { Id = ENGLISH_GARDEN_ID, Name = "English Garden" } };
 
             // Act
             var response = await client.GetAsync(BASE_URL);

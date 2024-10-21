@@ -63,7 +63,5 @@ namespace CocktailStrategist.Controllers
             var content = await _ingredientService.Delete(id);
             return content == null ? NotFound() : Ok();
         }
-
-
     }
 }

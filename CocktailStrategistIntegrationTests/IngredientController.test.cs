@@ -11,6 +11,7 @@ namespace CocktailStrategist.Tests.Integration
     public class IngredientControllerTests
     {
         private readonly Guid LIME_ID = Guid.Parse("a7473d26-ab2d-4364-816e-89fe943b1895");
+        private readonly Guid ORGEAT_ID = Guid.Parse("5c4045e1-44e7-4483-8f4d-e2588136d75d");
         private const string BASE_URL = "/ingredient";
 
         private HttpClient client;
@@ -22,15 +23,27 @@ namespace CocktailStrategist.Tests.Integration
             {
             });
             client = factory.CreateClient();
+            var ingredient = new Ingredient { Id = LIME_ID, Name = "Lime" };
+            var payload = JsonConvert.SerializeObject(ingredient);
+            var request = new StringContent(payload, Encoding.UTF8, "application/json");
+            client.PostAsync(BASE_URL, request);
+
+            ingredient = new Ingredient { Id = ORGEAT_ID, Name = "Orgeat" };
+            payload = JsonConvert.SerializeObject(ingredient);
+            request = new StringContent(payload, Encoding.UTF8, "application/json");
+            client.PostAsync(BASE_URL, request);
         }
         [OneTimeTearDown]
-        public void FixtureTearDown() { client.Dispose(); }
+        public void FixtureTearDown() {
+            client.DeleteAsync(BASE_URL + $"{LIME_ID}");
+            client.DeleteAsync(BASE_URL + $"{ORGEAT_ID}"); 
+            client.Dispose(); }
 
         [Test]
         public async Task Get_retrievesSpecifiedIngredient()
         {
             // Arrange
-            var ingredient = new Ingredient { Id = Guid.Parse("a7473d26-ab2d-4364-816e-89fe943b1895"), Name = "Lime" };
+            var ingredient = new Ingredient { Id = LIME_ID, Name = "Lime" };
             var url = BASE_URL + $"/{ingredient.Id}";
 
             // Act
@@ -62,7 +75,7 @@ namespace CocktailStrategist.Tests.Integration
         {
             // Arrange
             var ingredients = new List<Ingredient> { new Ingredient { Id = LIME_ID, Name = "Lime" },
-                new Ingredient { Id = Guid.Parse("5c4045e1-44e7-4483-8f4d-e2588136d75d"), Name = "Orgeat" } };
+                new Ingredient { Id = ORGEAT_ID, Name = "Orgeat" } };
 
             // Act
             var response = await client.GetAsync(BASE_URL);
@@ -119,12 +132,12 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Update_EditsIngredientName()
         {
             // Arrange
-            var ingredient = new Ingredient { Id = LIME_ID, Name = "Ultimate Mai Tai" };
+            var ingredient = new Ingredient { Id = LIME_ID, Name = "Tahitian Lime" };
             var url = BASE_URL + $"/{ingredient.Id}";
             var payload = JsonConvert.SerializeObject(ingredient);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
-            var revert = new Ingredient { Id = LIME_ID, Name = "Mai Tai" };
+            var revert = new Ingredient { Id = LIME_ID, Name = "Lime" };
             var revertPayload = JsonConvert.SerializeObject(revert);
             var revertRequest = new StringContent(revertPayload, Encoding.UTF8, "application/json");
 
