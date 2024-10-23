@@ -4,15 +4,28 @@ using Newtonsoft.Json;
 using FluentAssertions;
 using System.Net;
 using System.Text;
+using CocktailStrategist.Data.Enum;
 
 namespace CocktailStrategist.Tests.Integration
 {
     [TestFixture]
     public class IngredientControllerTests
     {
-        private readonly Guid LIME_ID = Guid.Parse("a7473d26-ab2d-4364-816e-89fe943b1895");
-        private readonly Guid ORGEAT_ID = Guid.Parse("5c4045e1-44e7-4483-8f4d-e2588136d75d");
         private const string BASE_URL = "/ingredient";
+        private Ingredient lime = new Ingredient
+        {
+            Id = Guid.Parse("57295ca5-3e94-403e-acb7-01417ed03c4d"),
+            Name = "Lime",
+            isAvailable = true,
+            Category = IngredientCategory.Citrus
+        };
+        private Ingredient orgeat = new Ingredient
+        {
+            Id = Guid.Parse("e6db0f8c-43aa-4eed-8e8c-f6cf20615f4b"),
+            Name = "Orgeat",
+            isAvailable = true,
+            Category = IngredientCategory.Syrups
+        };
 
         private HttpClient client;
 
@@ -23,28 +36,16 @@ namespace CocktailStrategist.Tests.Integration
             {
             });
             client = factory.CreateClient();
-            var ingredient = new Ingredient { Id = LIME_ID, Name = "Lime" };
-            var payload = JsonConvert.SerializeObject(ingredient);
-            var request = new StringContent(payload, Encoding.UTF8, "application/json");
-            client.PostAsync(BASE_URL, request);
-
-            ingredient = new Ingredient { Id = ORGEAT_ID, Name = "Orgeat" };
-            payload = JsonConvert.SerializeObject(ingredient);
-            request = new StringContent(payload, Encoding.UTF8, "application/json");
-            client.PostAsync(BASE_URL, request);
         }
         [OneTimeTearDown]
         public void FixtureTearDown() {
-            client.DeleteAsync(BASE_URL + $"{LIME_ID}");
-            client.DeleteAsync(BASE_URL + $"{ORGEAT_ID}"); 
             client.Dispose(); }
 
         [Test]
         public async Task Get_retrievesSpecifiedIngredient()
         {
             // Arrange
-            var ingredient = new Ingredient { Id = LIME_ID, Name = "Lime" };
-            var url = BASE_URL + $"/{ingredient.Id}";
+            var url = $"{BASE_URL}/{lime.Id}";
 
             // Act
             var response = await client.GetAsync(url);
@@ -53,7 +54,7 @@ namespace CocktailStrategist.Tests.Integration
             // Assert
             response.EnsureSuccessStatusCode();
             var retrievedIngredient = JsonConvert.DeserializeObject<Ingredient>(content);
-            retrievedIngredient.Should().BeEquivalentTo(ingredient, o => o.ComparingByMembers<Ingredient>());
+            retrievedIngredient.Should().BeEquivalentTo(lime, o => o.ComparingByMembers<Ingredient>());
         }
 
         [Test]
@@ -61,7 +62,7 @@ namespace CocktailStrategist.Tests.Integration
         {
             // Arrange
             var ingredient = new Ingredient { Id = Guid.NewGuid(), Name = "Fake" };
-            var url = BASE_URL + $"/{ingredient.Id}";
+            var url = $"{BASE_URL}/{ingredient.Id}";
 
             // Act
             var response = await client.GetAsync(url);
@@ -74,8 +75,7 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Get_retrievesAllIngredients()
         {
             // Arrange
-            var ingredients = new List<Ingredient> { new Ingredient { Id = LIME_ID, Name = "Lime" },
-                new Ingredient { Id = ORGEAT_ID, Name = "Orgeat" } };
+            var ingredients = new List<Ingredient> {lime, orgeat};
 
             // Act
             var response = await client.GetAsync(BASE_URL);
@@ -98,7 +98,7 @@ namespace CocktailStrategist.Tests.Integration
             // Act
             var createResponse = await client.PostAsync(BASE_URL, request);
 
-            var getUrl = BASE_URL + $"/{ingredient.Id}";
+            var getUrl = $"{BASE_URL}/{ingredient.Id}";
             var getResponse = await client.GetAsync(getUrl);
             var content = await getResponse.Content.ReadAsStringAsync();
             var retrievedIngredient = JsonConvert.DeserializeObject<Ingredient>(content);
@@ -107,7 +107,6 @@ namespace CocktailStrategist.Tests.Integration
             // Assert
             createResponse.Should().HaveStatusCode(HttpStatusCode.OK);
             retrievedIngredient.Should().BeEquivalentTo(ingredient, o => o.ComparingByMembers<Ingredient>());
-
         }
 
         [Test]
@@ -115,7 +114,7 @@ namespace CocktailStrategist.Tests.Integration
         {
             // Arrange
             var ingredient = new { Id = Guid.NewGuid(), Foo = "bar" };
-            var getUrl = BASE_URL + $"/{ingredient.Id}";
+            var getUrl = $"{BASE_URL}/{ingredient.Id}";
             var payload = JsonConvert.SerializeObject(ingredient);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
@@ -132,32 +131,32 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Update_EditsIngredientName()
         {
             // Arrange
-            var ingredient = new Ingredient { Id = LIME_ID, Name = "Tahitian Lime" };
-            var url = BASE_URL + $"/{ingredient.Id}";
-            var payload = JsonConvert.SerializeObject(ingredient);
+            lime.Name = "Tahitian Lime";
+            var url = $"{BASE_URL}/{lime.Id}";
+            var payload = JsonConvert.SerializeObject(lime);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
-
-            var revert = new Ingredient { Id = LIME_ID, Name = "Lime" };
-            var revertPayload = JsonConvert.SerializeObject(revert);
-            var revertRequest = new StringContent(revertPayload, Encoding.UTF8, "application/json");
 
             // Act
             var response = await client.PutAsync(url, request);
             var getResponse = await client.GetAsync(url);
             var content = await getResponse.Content.ReadAsStringAsync();
             var retrievedIngredient = JsonConvert.DeserializeObject<Ingredient>(content);
-            await client.PutAsync(url, revertRequest);
-
+           
             // Assert
             response.Should().HaveStatusCode(HttpStatusCode.OK);
-            retrievedIngredient.Should().BeEquivalentTo(ingredient, o => o.ComparingByMembers<Ingredient>());
+            retrievedIngredient.Should().BeEquivalentTo(lime, o => o.ComparingByMembers<Ingredient>());
+
+            lime.Name = "Lime";
+            payload = JsonConvert.SerializeObject(lime);
+            request = new StringContent(payload, Encoding.UTF8, "application/json");
+            await client.PutAsync(url, request);
         }
         [Test]
         public async Task Update_responds404WithNonExistantId()
         {
             // Arrange
             var ingredient = new Ingredient { Id = Guid.NewGuid(), Name = "Fake" };
-            var url = BASE_URL + $"/{ingredient.Id}";
+            var url = $"{BASE_URL}/{ingredient.Id}";
             var payload = JsonConvert.SerializeObject(ingredient);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
 
@@ -171,8 +170,8 @@ namespace CocktailStrategist.Tests.Integration
         public async Task Update_responds400WithMalformedIngredient()
         {
             // Arrange
-            var ingredient = new { Id = LIME_ID, Foo = "Bar" };
-            var url = BASE_URL + $"/{ingredient.Id}";
+            var ingredient = new { Id = lime.Id, Foo = "Bar" };
+            var url = $"{BASE_URL}/{ingredient.Id}";
             var payload = JsonConvert.SerializeObject(ingredient);
             var request = new StringContent(payload, Encoding.UTF8, "application/json");
             // Act
@@ -190,7 +189,7 @@ namespace CocktailStrategist.Tests.Integration
             await client.PostAsync(BASE_URL, request);
             var count = await TestUtils.CountGetRequestContents(BASE_URL, client);
 
-            var deleteUrl = BASE_URL + $"/{ingredient.Id}";
+            var deleteUrl =$"{BASE_URL}/{ingredient.Id}";
             // Act
             var response = await client.DeleteAsync(deleteUrl);
             var getResponse = await client.GetAsync(deleteUrl);
@@ -208,7 +207,7 @@ namespace CocktailStrategist.Tests.Integration
             // Arrange
             var ingredient = new Ingredient { Id = Guid.NewGuid(), Name = "Fake" };
             var count = await TestUtils.CountGetRequestContents(BASE_URL, client);
-            var deleteUrl = BASE_URL + $"/{ingredient.Id}";
+            var deleteUrl = $"{BASE_URL}/{ingredient.Id}";
 
             // Act
             var response = await client.DeleteAsync(deleteUrl);
