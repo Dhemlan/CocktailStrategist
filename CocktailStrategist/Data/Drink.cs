@@ -8,9 +8,7 @@ namespace CocktailStrategist.Data
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-
-        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
-
+        public List<Guid> IngredientList { get; set; } = new List<Guid>();
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }

@@ -8,8 +8,8 @@ namespace CocktailStrategist.Repo
 {
     public class BaseRepo<T> : IBaseRepo<T> where T : class
     { 
-        private readonly DbContext _dbContext;
-        private readonly DbSet<T> _dbSet;
+        protected readonly DbContext _dbContext;
+        protected readonly DbSet<T> _dbSet;
         
         public BaseRepo(AppDbContext dbContext)
         {
