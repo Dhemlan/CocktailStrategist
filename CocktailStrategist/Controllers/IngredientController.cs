@@ -1,4 +1,5 @@
 ﻿using CocktailStrategist.Data;
+using CocktailStrategist.Data.Enum;
 using CocktailStrategist.Services;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,18 @@ namespace CocktailStrategist.Controllers
         {
             _ingredientService = ingredientService;
         }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Ingredient>>> Get()
+        //{
+        //    var content = await _ingredientService.Get();
+        //    return Ok(content);
+        //}
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ingredient>>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<IGrouping<IngredientCategory, Ingredient>>>> Get()
         {
-            var content = await _ingredientService.Get();
+            var content = await _ingredientService.GetAsCategories();
             return Ok(content);
         }
 
@@ -63,7 +72,5 @@ namespace CocktailStrategist.Controllers
             var content = await _ingredientService.Delete(id);
             return content == null ? NotFound() : Ok();
         }
-
-
     }
 }

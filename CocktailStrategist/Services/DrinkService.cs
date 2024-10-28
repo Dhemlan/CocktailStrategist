@@ -1,4 +1,6 @@
-﻿using CocktailStrategist.Data;
+﻿using AutoMapper;
+using CocktailStrategist.Data;
+using CocktailStrategist.Data.CreateRequestObjects;
 using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services.Interfaces;
 
@@ -7,12 +9,23 @@ namespace CocktailStrategist.Services
     public class DrinkService : IDrinkService
     {
         private readonly IBaseRepo<Drink> _repo;
-        public DrinkService(IBaseRepo<Drink> repo) {
+        private readonly IMapper _mapper;
+
+        private readonly IIngredientService _ingredientService;
+        public DrinkService(IBaseRepo<Drink> repo, IMapper mapper, IIngredientService ingredientService) {
             _repo = repo;
+            _mapper = mapper;
+            _ingredientService = ingredientService;
         }
-        public async Task Create(Drink drink)
+        public async Task Create(CreateDrinkRequest drinkRequest)
         {
-            _repo.Create(drink);
+            IEnumerable<Ingredient> ingredients = await _ingredientService.GetMultiple(drinkRequest.Ingredients);
+            if (ingredients.Count() != drinkRequest.Ingredients.Count)
+            {
+                throw new ArgumentException("Non-existant ingredient found");
+            }
+            
+            _repo.Create(new Drink { Id = Guid.Empty, Name = drinkRequest.Name, IngredientList = drinkRequest.Ingredients });
             await _repo.SaveAsync();
         }
 

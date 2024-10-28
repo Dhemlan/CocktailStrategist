@@ -1,4 +1,6 @@
-﻿using CocktailStrategist.Data;
+﻿using AutoMapper;
+using CocktailStrategist.Data;
+using CocktailStrategist.Data.CreateRequestObjects;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +11,22 @@ namespace CocktailStrategist.Controllers
     public class DrinkController: ControllerBase
     {
         private readonly IDrinkService _drinkService;
+        private readonly IMapper _mapper;
 
-        public DrinkController(IDrinkService drinkService)
+        public DrinkController(IDrinkService drinkService, IMapper mapper)
         {
             _drinkService = drinkService;
+            _mapper = mapper;
+
         }
+
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //public async Task<ActionResult<IEnumerable<Drink>>> Get()
+        //{
+        //    var content = await _drinkService.Get();
+        //    return Ok(content);
+        //}
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -35,9 +48,16 @@ namespace CocktailStrategist.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task Post([FromBody] Drink drink)
+        public async Task<IActionResult> Post([FromBody] CreateDrinkRequest drink)
         {
-            await _drinkService.Create(drink);
+            try {
+                await _drinkService.Create(drink);
+            }
+            // Todo best practice for this type of exception
+            catch (ArgumentException e) {
+                return BadRequest();
+            }
+            return Ok();
         }
 
         [HttpPut("{id}")]

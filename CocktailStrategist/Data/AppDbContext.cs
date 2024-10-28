@@ -12,5 +12,6 @@ namespace CocktailStrategist.Data
         }
         public DbSet<Drink> Drinks { get; set; }
         public DbSet<Ingredient> Ingredients { get; set;}
+        public DbSet<Recipe> Recipes { get; set; }
     }
 }
