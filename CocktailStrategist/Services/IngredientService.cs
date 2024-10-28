@@ -1,6 +1,8 @@
 ﻿using CocktailStrategist.Data;
+using CocktailStrategist.Data.Enum;
 using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services.Interfaces;
+using System.ComponentModel;
 
 namespace CocktailStrategist.Services
 {
@@ -24,6 +26,12 @@ namespace CocktailStrategist.Services
         public Task<Ingredient?> Get(Guid id)
         {
             return _repo.Get(id);
+        }
+
+        public async Task<IEnumerable<IGrouping<IngredientCategory, Ingredient>>> GetAsCategories()
+        {
+            var ingredients = await _repo.GetAll();
+            return ingredients.GroupBy(i => i.Category).ToList();
         }
 
         public async Task<IEnumerable<Ingredient>> GetMultiple(List<Guid> ingredientIds)

@@ -1,4 +1,5 @@
 ﻿using CocktailStrategist.Data;
+using CocktailStrategist.Data.Enum;
 
 namespace CocktailStrategist.Services.Interfaces
 {
@@ -10,6 +11,8 @@ namespace CocktailStrategist.Services.Interfaces
         Task<IEnumerable<Ingredient>> GetMultiple(List<Guid> ingredientIds);
 
         Task<Ingredient?> Get(Guid id);
+
+        Task<IEnumerable<IGrouping<IngredientCategory, Ingredient>>> GetAsCategories();
 
         Task Update(Ingredient ingredient);
 

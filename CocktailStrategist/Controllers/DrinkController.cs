@@ -20,6 +20,14 @@ namespace CocktailStrategist.Controllers
 
         }
 
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //public async Task<ActionResult<IEnumerable<Drink>>> Get()
+        //{
+        //    var content = await _drinkService.Get();
+        //    return Ok(content);
+        //}
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Drink>>> Get()
