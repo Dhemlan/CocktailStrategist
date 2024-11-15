@@ -41,16 +41,16 @@ jobs:
     - name: Build
       run: dotnet build --no-restore ./CocktailStrategist/CocktailStrategist.sln
     - name: Wait for PostgreSQL
-        run: |
-          until pg_isready -h localhost -p 5432 -U test_user; do
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 2
-          done
-          - name: Run Migrations
-        env:
-          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
-        run: dotnet ef database update
+      run: |
+        until pg_isready -h localhost -p 5432 -U test_user; do
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 2
+        done
+    - name: Run Migrations
+      env:
+        ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
+      run: dotnet ef database update
     - name: Test
-     env:
+      env:
           ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
       run: dotnet test --no-build --verbosity normal ./CocktailStrategist/CocktailStrategist.sln
