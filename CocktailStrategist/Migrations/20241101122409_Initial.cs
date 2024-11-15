@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CocktailStrategist.Data.Enum;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -13,6 +12,19 @@ namespace CocktailStrategist.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+           
+            migrationBuilder.CreateTable(
+                name: "Drinks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Drinks", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Ingredients",
                 columns: table => new
@@ -25,25 +37,6 @@ namespace CocktailStrategist.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Drinks",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    IngredientList = table.Column<List<Guid>>(type: "uuid[]", nullable: false),
-                    IngredientId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Drinks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Drinks_Ingredients_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -63,6 +56,30 @@ namespace CocktailStrategist.Migrations
                         column: x => x.DrinkId,
                         principalTable: "Drinks",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DrinkIngredient",
+                columns: table => new
+                {
+                    DrinksId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IngredientsId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DrinkIngredient", x => new { x.DrinksId, x.IngredientsId });
+                    table.ForeignKey(
+                        name: "FK_DrinkIngredient_Drinks_DrinksId",
+                        column: x => x.DrinksId,
+                        principalTable: "Drinks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DrinkIngredient_Ingredients_IngredientsId",
+                        column: x => x.IngredientsId,
+                        principalTable: "Ingredients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,9 +108,9 @@ namespace CocktailStrategist.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drinks_IngredientId",
-                table: "Drinks",
-                column: "IngredientId");
+                name: "IX_DrinkIngredient_IngredientsId",
+                table: "DrinkIngredient",
+                column: "IngredientsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drinks_Name",
@@ -127,16 +144,19 @@ namespace CocktailStrategist.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DrinkIngredient");
+
+            migrationBuilder.DropTable(
                 name: "IngredientUsage");
+
+            migrationBuilder.DropTable(
+                name: "Ingredients");
 
             migrationBuilder.DropTable(
                 name: "Recipes");
 
             migrationBuilder.DropTable(
                 name: "Drinks");
-
-            migrationBuilder.DropTable(
-                name: "Ingredients");
         }
     }
 }

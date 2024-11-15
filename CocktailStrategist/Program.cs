@@ -1,6 +1,5 @@
 using AutoMapper;
 using CocktailStrategist.Data;
-using CocktailStrategist.Data.DTOs;
 using CocktailStrategist.Data.Enum;
 using CocktailStrategist.Data.Mapping;
 using CocktailStrategist.Repo;
@@ -8,6 +7,7 @@ using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var defaultCors = "default";
 
@@ -15,11 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<IDrinkService, DrinkService>();
 builder.Services.AddScoped<IIngredientService, IngredientService> ();
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));
-builder.Services.AddScoped<IIngredientRepo, IngredientRepo>(); 
+builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
+
 
 string connString;
 if (builder.Environment.IsDevelopment()) {
@@ -66,7 +68,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// todo was causing CORS issue in prod
+// to research importance 
+//app.UseHttpsRedirection();
 
 app.UseCors(defaultCors);
 

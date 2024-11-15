@@ -24,8 +24,15 @@ namespace CocktailStrategist.Services
             {
                 throw new ArgumentException("Non-existant ingredient found");
             }
+            // Todo need a transaction here
+           // _ingredientService.
             
-            _repo.Create(new Drink { Id = Guid.Empty, Name = drinkRequest.Name, IngredientList = drinkRequest.Ingredients });
+            _repo.Create(new Drink { Id = Guid.Empty, Name = drinkRequest.Name, Ingredients = ingredients});
+            await _repo.SaveAsync();
+
+            var drinks = await _repo.GetAll();
+            Drink newDrink = drinks.Where(drink => drink.Name.Equals(drinkRequest.Name)).First();
+            await _ingredientService.UpdateForNewDrink(ingredients, newDrink);
             await _repo.SaveAsync();
         }
 

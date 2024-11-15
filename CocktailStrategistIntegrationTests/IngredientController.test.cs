@@ -24,7 +24,7 @@ namespace CocktailStrategist.Tests.Integration
             Id = Guid.Parse("e6db0f8c-43aa-4eed-8e8c-f6cf20615f4b"),
             Name = "Orgeat",
             isAvailable = true,
-            Category = IngredientCategory.Syrups
+            Category = IngredientCategory.SyrupsAndSweetners
         };
 
         private HttpClient client;
@@ -80,7 +80,7 @@ namespace CocktailStrategist.Tests.Integration
             // Act
             var response = await client.GetAsync(BASE_URL);
             var content = await response.Content.ReadAsStringAsync();
-            var retrievedIngredients = JsonConvert.DeserializeObject<List<Ingredient>>(content);
+            var retrievedIngredients = JsonConvert.DeserializeObject<List<List<Ingredient>>>(content);
 
             //Assert
             response.Should().HaveStatusCode(HttpStatusCode.OK);

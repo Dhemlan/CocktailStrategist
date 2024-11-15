@@ -1,8 +1,8 @@
 ﻿using CocktailStrategist.Data;
+using CocktailStrategist.Data.CreateRequestObjects;
 using CocktailStrategist.Data.Enum;
 using CocktailStrategist.Repo.Interfaces;
 using CocktailStrategist.Services.Interfaces;
-using System.ComponentModel;
 
 namespace CocktailStrategist.Services
 {
@@ -12,9 +12,10 @@ namespace CocktailStrategist.Services
         public IngredientService(IIngredientRepo repo) {
             _repo = repo;
         }
-        public async Task Create(Ingredient ingredient)
+        public async Task Create(CreateIngredientRequest ingredientRequest)
         {
-            _repo.Create(ingredient);
+            _repo.Create(new Ingredient { Id = Guid.Empty, Name =  ingredientRequest.Name, isAvailable = ingredientRequest.IsAvailable,
+                Category = ingredientRequest.Category});
             await _repo.SaveAsync();
         }
 
@@ -39,11 +40,32 @@ namespace CocktailStrategist.Services
             return await _repo.GetMultiple(ingredientIds);
         }
 
+        public async Task<Ingredient> GetWithDrinks(Guid id)
+        {
+            return _repo.GetWithDrinks(id);
+        }
+
+        public async Task<IEnumerable<Ingredient>> GetLinkedIngredients(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task Update(Ingredient ingredient)
         {
             _repo.Update(ingredient);
             await _repo.SaveAsync();
         }
+
+        public async Task UpdateForNewDrink(IEnumerable<Ingredient> ingredients, Drink drink)
+        {
+            foreach (Ingredient ingredient in ingredients)
+            {
+                ingredient.Drinks.Add(drink);
+                _repo.Update(ingredient);
+            }
+            await _repo.SaveAsync();
+        }
+
         public async Task<Ingredient?> Delete(Guid id)
         {
             var result = await _repo.Delete(id);

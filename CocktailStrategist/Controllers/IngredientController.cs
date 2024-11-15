@@ -1,8 +1,7 @@
 ﻿using CocktailStrategist.Data;
+using CocktailStrategist.Data.CreateRequestObjects;
 using CocktailStrategist.Data.Enum;
-using CocktailStrategist.Services;
 using CocktailStrategist.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CocktailStrategist.Controllers
@@ -42,10 +41,17 @@ namespace CocktailStrategist.Controllers
             return content == null ? NotFound() : content;
         }
 
+        [HttpGet("map/{id}")]
+        public async Task<IActionResult> GetLinkedIngredients(Guid id)
+        {
+            var content = await _ingredientService.GetWithDrinks(id);
+            return Ok(content);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task Post(Ingredient ingredient)
+        public async Task Post([FromBody]CreateIngredientRequest ingredient)
         {
             await _ingredientService.Create(ingredient);
         }

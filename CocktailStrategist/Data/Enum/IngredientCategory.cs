@@ -4,16 +4,17 @@
     {
         BaseSpirits,
         BaseSpiritsExpanded,
-        Citrus,
-        Syrups,
         Fermented,
-        LiqueurFruit,
-        LiqueurBotanical,
-        LiqueurSpiceNut,
-        Dessert,
-        Bitters,
-        Juice,
+        FruitLiqueurs,
+        BotanicalLiqueurs,
+        SpiceAndNutLiqueurs,
+        DessertLiqueurs,
+        Citrus,
+        SyrupsAndSweetners,
+        BittersAndWaters,
+        ProduceAndJuice,
         SoftDrinks,
+        HerbsAndSpices, 
         Pantry
     }
 }

@@ -15,17 +15,13 @@ namespace CocktailStrategist.Tests.Integration
     public class DrinkControllerTests
     {
         private const string BASE_URL = "/drink";
-        private Drink maiTai = new Drink
-        {
-            Id = Guid.Parse("83174492-bed9-4f09-8a01-c735947eff21"),
-            Name = "Mai Tai",
-            IngredientList = new List<Guid> { Guid.Parse("e6db0f8c-43aa-4eed-8e8c-f6cf20615f4b"), Guid.Parse("57295ca5-3e94-403e-acb7-01417ed03c4d") }
-        };
-        private Drink englishGarden = new Drink
+        // Mutating tests will be performed on maiTai but not englishGarden
+        private Drink maiTai;
+        private readonly Drink englishGarden = new Drink
         {
             Id = Guid.Parse("5f3f5b3d-33a6-4021-9439-51919350d1da"),
             Name = "English Garden",
-            IngredientList = new List<Guid> { Guid.Parse("57295ca5-3e94-403e-acb7-01417ed03c4d") }
+            //IngredientList = new List<Guid> { Guid.Parse("57295ca5-3e94-403e-acb7-01417ed03c4d") }
         };
 
         private HttpClient client;
@@ -42,12 +38,17 @@ namespace CocktailStrategist.Tests.Integration
         [OneTimeTearDown]
         public void FixtureTearDown() {
             client.Dispose(); }
-        //[SetUp]
-        //public void TestSetUp()
-        //{
-        //    transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        [SetUp]
+        public void TestSetUp()
+        {
+            maiTai = new Drink
+            {
+                Id = Guid.Parse("83174492-bed9-4f09-8a01-c735947eff21"),
+                Name = "Mai Tai",
+                //IngredientList = new List<Guid> { Guid.Parse("e6db0f8c-43aa-4eed-8e8c-f6cf20615f4b"), Guid.Parse("57295ca5-3e94-403e-acb7-01417ed03c4d") }
+            };
 
-        //}
+        }
         //[TearDown]
         //public void TestTearDown() { transaction.Dispose();}
 
@@ -64,7 +65,7 @@ namespace CocktailStrategist.Tests.Integration
             // Assert
             response.Should().HaveStatusCode(HttpStatusCode.OK);
             var retrievedDrink = JsonConvert.DeserializeObject<Drink>(content);
-            retrievedDrink.Should().BeEquivalentTo(maiTai, o => o.ComparingByMembers<Drink>().Excluding(d => d.IngredientList));
+            retrievedDrink.Should().BeEquivalentTo(maiTai, o => o.ComparingByMembers<Drink>()); //.Excluding(d => d.IngredientList));
         }
 
         [Test]
@@ -141,13 +142,21 @@ namespace CocktailStrategist.Tests.Integration
         //[Test]
         // error on same name for drink
 
-        //[Test]
-        //public async Task Post_returns400WithDrinkContainingNonExistantIngredient()
-        //{
+        [Test]
+        public async Task Post_returns400WithDrinkContainingNonExistantIngredient()
+        {
             // Arrange
+            var drinkRequest = new CreateDrinkRequest { Name = "Test Drink", 
+                Ingredients = new List<Guid> { Guid.NewGuid() } };
+            var payload = JsonConvert.SerializeObject(drinkRequest);
+            var request = new StringContent(payload, Encoding.UTF8, "application/json");
+
             // Act
+            var response = await client.PostAsync(BASE_URL, request);
+
             // Assert
-        //}
+            response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        }
         [Test]
         public async Task Update_EditsDrinkName()
         {
