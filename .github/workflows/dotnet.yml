@@ -52,7 +52,7 @@ jobs:
     - name: Run Migrations
       env:
         ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
-      run: dotnet ef database update
+      run: dotnet ef database update ./CocktailStrategist/CocktailStrategist.sln
     - name: Test
       env:
           ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
