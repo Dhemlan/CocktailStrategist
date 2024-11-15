@@ -41,9 +41,6 @@ jobs:
     - name: Install EF Core Tools
       run: dotnet tool install --global dotnet-ef
 
-    - name: Add EF Tools to PATH
-      run: echo "::add-path::$(dotnet tool list -g | grep dotnet-ef | awk '{print $4}')"
-
     - name: Build
       run: dotnet build --no-restore ./CocktailStrategist/CocktailStrategist.sln
     - name: Wait for PostgreSQL
