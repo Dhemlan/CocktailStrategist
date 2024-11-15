@@ -14,6 +14,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      # Define the PostgreSQL database service
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd="pg_isready -U test_user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -24,5 +40,17 @@ jobs:
       run: dotnet restore ./CocktailStrategist/CocktailStrategist.sln
     - name: Build
       run: dotnet build --no-restore ./CocktailStrategist/CocktailStrategist.sln
+    - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U test_user; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 2
+          done
+          - name: Run Migrations
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
+        run: dotnet ef database update
     - name: Test
+     env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=test_db;Username=test_user;Password=test_password"
       run: dotnet test --no-build --verbosity normal ./CocktailStrategist/CocktailStrategist.sln
