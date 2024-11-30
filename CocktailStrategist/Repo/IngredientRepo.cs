@@ -14,9 +14,9 @@ namespace CocktailStrategist.Repo
             return await _dbSet.Where(i => ingredientIds.Contains(i.Id)).ToListAsync();
         }
 
-        public Ingredient GetWithDrinks(Guid id)
+        public async Task<Ingredient> GetWithDrinks(Guid id)
         {
-            return _dbSet.Where(x => x.Id == id).Include(i => i.Drinks).ThenInclude(d => d.Ingredients).First();
+            return await _dbSet.Where(x => x.Id == id).Include(i => i.Drinks).ThenInclude(d => d.Ingredients).FirstAsync();
         }
     }
 

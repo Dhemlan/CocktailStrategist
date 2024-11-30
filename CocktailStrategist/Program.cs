@@ -19,8 +19,11 @@ builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<IDrinkService, DrinkService>();
 builder.Services.AddScoped<IIngredientService, IngredientService> ();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>));
 builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
+builder.Services.AddScoped<IDrinkRepo, DrinkRepo>();
+builder.Services.AddScoped<IIngredientUsageRepo, IngredientUsageRepo>();
 
 
 string connString;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CocktailStrategist.Data;
 using CocktailStrategist.Data.CreateRequestObjects;
+using CocktailStrategist.Data.DTOs;
 using CocktailStrategist.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +21,6 @@ namespace CocktailStrategist.Controllers
 
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //public async Task<ActionResult<IEnumerable<Drink>>> Get()
-        //{
-        //    var content = await _drinkService.Get();
-        //    return Ok(content);
-        //}
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Drink>>> Get()
@@ -45,16 +38,26 @@ namespace CocktailStrategist.Controllers
             return content == null ? NotFound() :  content;
         }
 
+        [HttpGet("/drinkList")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<DrinkDTOMini>>> GetDrinkList(Guid? ingredientId = null)
+        {
+            var content = await _drinkService.GetDrinkList(ingredientId);
+            // TODO: no longer sufficient for notFound
+            return content.Count() == 0 ? NotFound() : Ok(content);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] CreateDrinkRequest drink)
+        public async Task<IActionResult> Post([FromBody] CreateDrinkDTO drink)
         {
             try {
                 await _drinkService.Create(drink);
             }
-            // Todo best practice for this type of exception
-            catch (ArgumentException e) {
+            // TODO: best practice for this type of exception
+            catch (ArgumentException) {
                 return BadRequest();
             }
             return Ok();

@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CocktailStrategist.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241101122409_Initial")]
-    partial class Initial
+    [Migration("20241130062404_defaultRecipe")]
+    partial class defaultRecipe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace CocktailStrategist.Migrations
                 .HasAnnotation("ProductVersion", "9.0.0-rc.2.24474.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "ingredientCategory", new[] { "base_spirits", "base_spirits_expanded", "bitters_and_waters", "botanical_liqueurs", "citrus", "dessert_liqueurs", "fermented", "fruit_liqueurs", "herbs_and_spices", "pantry", "produce_and_juice", "soft_drinks", "spice_and_nut_liqueurs", "syrups_and_sweetners" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "ingredientCategory", new[] { "base_spirits", "bitters_and_waters", "botanical_liqueurs", "citrus", "dairy_and_eggs", "dessert_liqueurs", "fermented", "fruit_liqueurs", "herbs_and_spices", "other", "pantry", "produce_and_juice", "secondary_base_spirits", "soft_drinks", "spice_and_nut_liqueurs", "syrups_and_sweeteners" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CocktailStrategist.Data.Drink", b =>
@@ -33,9 +33,18 @@ namespace CocktailStrategist.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsFav")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsToTry")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("isHidden")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -71,27 +80,19 @@ namespace CocktailStrategist.Migrations
 
             modelBuilder.Entity("CocktailStrategist.Data.IngredientUsage", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("IngredientId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Measurement")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("RecipeId")
-                        .HasColumnType("uuid");
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("numeric(4,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("IngredientId", "Measurement", "Amount");
 
-                    b.HasIndex("IngredientId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("IngredientUsage");
+                    b.ToTable("IngredientUsages");
                 });
 
             modelBuilder.Entity("CocktailStrategist.Data.Recipe", b =>
@@ -100,12 +101,18 @@ namespace CocktailStrategist.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DrinkId")
+                    b.Property<Guid>("DrinkId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Instructions")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Source")
                         .IsRequired()
@@ -133,26 +140,47 @@ namespace CocktailStrategist.Migrations
                     b.ToTable("DrinkIngredient");
                 });
 
+            modelBuilder.Entity("IngredientUsageRecipe", b =>
+                {
+                    b.Property<Guid>("RecipesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("IngredientUsagesIngredientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IngredientUsagesMeasurement")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("IngredientUsagesAmount")
+                        .HasColumnType("numeric(4,2)");
+
+                    b.HasKey("RecipesId", "IngredientUsagesIngredientId", "IngredientUsagesMeasurement", "IngredientUsagesAmount");
+
+                    b.HasIndex("IngredientUsagesIngredientId", "IngredientUsagesMeasurement", "IngredientUsagesAmount");
+
+                    b.ToTable("IngredientUsageRecipe");
+                });
+
             modelBuilder.Entity("CocktailStrategist.Data.IngredientUsage", b =>
                 {
                     b.HasOne("CocktailStrategist.Data.Ingredient", "Ingredient")
-                        .WithMany()
+                        .WithMany("IngredientUsages")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CocktailStrategist.Data.Recipe", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId");
 
                     b.Navigation("Ingredient");
                 });
 
             modelBuilder.Entity("CocktailStrategist.Data.Recipe", b =>
                 {
-                    b.HasOne("CocktailStrategist.Data.Drink", null)
+                    b.HasOne("CocktailStrategist.Data.Drink", "Drink")
                         .WithMany("Recipes")
-                        .HasForeignKey("DrinkId");
+                        .HasForeignKey("DrinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Drink");
                 });
 
             modelBuilder.Entity("DrinkIngredient", b =>
@@ -170,14 +198,29 @@ namespace CocktailStrategist.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("IngredientUsageRecipe", b =>
+                {
+                    b.HasOne("CocktailStrategist.Data.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CocktailStrategist.Data.IngredientUsage", null)
+                        .WithMany()
+                        .HasForeignKey("IngredientUsagesIngredientId", "IngredientUsagesMeasurement", "IngredientUsagesAmount")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CocktailStrategist.Data.Drink", b =>
                 {
                     b.Navigation("Recipes");
                 });
 
-            modelBuilder.Entity("CocktailStrategist.Data.Recipe", b =>
+            modelBuilder.Entity("CocktailStrategist.Data.Ingredient", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("IngredientUsages");
                 });
 #pragma warning restore 612, 618
         }

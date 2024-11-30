@@ -51,7 +51,7 @@ namespace CocktailStrategist.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task Post([FromBody]CreateIngredientRequest ingredient)
+        public async Task Post([FromBody]CreateIngredientDTO ingredient)
         {
             await _ingredientService.Create(ingredient);
         }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CocktailStrategist.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,10 @@ namespace CocktailStrategist.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    IsFav = table.Column<bool>(type: "boolean", nullable: false),
+                    IsToTry = table.Column<bool>(type: "boolean", nullable: false),
+                    isHidden = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,6 +48,7 @@ namespace CocktailStrategist.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Instructions = table.Column<string>(type: "text", nullable: false),
+                    Rating = table.Column<int>(type: "integer", nullable: false),
                     Source = table.Column<string>(type: "text", nullable: false),
                     DrinkId = table.Column<Guid>(type: "uuid", nullable: true)
                 },

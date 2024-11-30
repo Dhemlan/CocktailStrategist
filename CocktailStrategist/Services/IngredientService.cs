@@ -12,21 +12,21 @@ namespace CocktailStrategist.Services
         public IngredientService(IIngredientRepo repo) {
             _repo = repo;
         }
-        public async Task Create(CreateIngredientRequest ingredientRequest)
+        public async Task Create(CreateIngredientDTO ingredientRequest)
         {
             _repo.Create(new Ingredient { Id = Guid.Empty, Name =  ingredientRequest.Name, isAvailable = ingredientRequest.IsAvailable,
                 Category = ingredientRequest.Category});
             await _repo.SaveAsync();
         }
 
-        public Task<IEnumerable<Ingredient>> Get()
+        public async Task<IEnumerable<Ingredient>> Get()
         {
-            return _repo.GetAll();
+            return await _repo.GetAll();
         }
 
-        public Task<Ingredient?> Get(Guid id)
+        public async Task<Ingredient?> Get(Guid id)
         {
-            return _repo.Get(id);
+            return await _repo.Get(id);
         }
 
         public async Task<IEnumerable<IGrouping<IngredientCategory, Ingredient>>> GetAsCategories()
@@ -42,7 +42,7 @@ namespace CocktailStrategist.Services
 
         public async Task<Ingredient> GetWithDrinks(Guid id)
         {
-            return _repo.GetWithDrinks(id);
+            return await _repo.GetWithDrinks(id);
         }
 
         public async Task<IEnumerable<Ingredient>> GetLinkedIngredients(Guid id)

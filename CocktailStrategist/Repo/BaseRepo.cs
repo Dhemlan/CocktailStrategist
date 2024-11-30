@@ -41,7 +41,8 @@ namespace CocktailStrategist.Repo
         }
 
         public async Task<T?> Delete(Guid id)
-        {
+        {   
+            // TODO: better way to do this without async?
             T? existing = await _dbSet.FindAsync(id);
             return existing != null ? _dbSet.Remove(existing).Entity : null;
         }

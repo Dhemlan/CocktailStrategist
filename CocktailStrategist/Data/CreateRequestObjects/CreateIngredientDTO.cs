@@ -2,7 +2,7 @@
 
 namespace CocktailStrategist.Data.CreateRequestObjects
 {
-    public class CreateIngredientRequest
+    public class CreateIngredientDTO
     {
         public string Name { get; set; }
         public bool IsAvailable { get; set; }

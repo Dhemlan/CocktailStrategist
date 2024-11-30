@@ -17,6 +17,7 @@ namespace CocktailStrategist.Data
 
         public ICollection<Drink> Drinks { get; } = new List<Drink>();
 
+        public ICollection<IngredientUsage> IngredientUsages { get; set; }   
     }
 }
 

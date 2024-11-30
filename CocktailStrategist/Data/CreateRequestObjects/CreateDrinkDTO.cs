@@ -1,8 +1,8 @@
 ﻿namespace CocktailStrategist.Data.CreateRequestObjects
 {
-    public class CreateDrinkRequest
+    public class CreateDrinkDTO
     {
         public string Name { get; set; }
-        public List<Guid> Ingredients { get; set; }
+        public CreateRecipeDTO Recipe { get; set; }
     }
 }

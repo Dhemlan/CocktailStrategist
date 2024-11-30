@@ -6,7 +6,7 @@ namespace CocktailStrategist.Services.Interfaces
 {
     public interface IIngredientService
     {
-        Task Create(CreateIngredientRequest ingredient);
+        Task Create(CreateIngredientDTO ingredient);
         Task<IEnumerable<Ingredient>> Get();
 
         Task<IEnumerable<Ingredient>> GetMultiple(List<Guid> ingredientIds);

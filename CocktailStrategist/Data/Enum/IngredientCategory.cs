@@ -3,18 +3,20 @@
     public enum IngredientCategory
     {
         BaseSpirits,
-        BaseSpiritsExpanded,
+        SecondaryBaseSpirits,
         Fermented,
         FruitLiqueurs,
         BotanicalLiqueurs,
         SpiceAndNutLiqueurs,
         DessertLiqueurs,
         Citrus,
-        SyrupsAndSweetners,
+        SyrupsAndSweeteners,
         BittersAndWaters,
         ProduceAndJuice,
+        DairyAndEggs,
         SoftDrinks,
         HerbsAndSpices, 
-        Pantry
+        Pantry,
+        Other
     }
 }

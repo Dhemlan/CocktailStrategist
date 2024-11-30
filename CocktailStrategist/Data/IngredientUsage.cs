@@ -1,10 +1,18 @@
-﻿namespace CocktailStrategist.Data
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CocktailStrategist.Data
 {
+    [PrimaryKey(nameof(IngredientId), nameof(Measurement), nameof(Amount))]
     public class IngredientUsage
     {
-        public Guid Id { get; set; }
-        public required Ingredient Ingredient { get; set; }
-        public required string Measurement { get; set; }
+
+        public List<Recipe> Recipes { get; set; }
+        public Guid IngredientId { get; set; }
+        public Ingredient Ingredient { get; set; }
+
+        [Precision(4, 2)]
+        public decimal Amount { get; set; }
+        public string Measurement { get; set; }
 
     }
 }

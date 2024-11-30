@@ -24,7 +24,7 @@ namespace CocktailStrategist.Tests.Integration
             Id = Guid.Parse("e6db0f8c-43aa-4eed-8e8c-f6cf20615f4b"),
             Name = "Orgeat",
             isAvailable = true,
-            Category = IngredientCategory.SyrupsAndSweetners
+            Category = IngredientCategory.SyrupsAndSweeteners
         };
 
         private HttpClient client;
